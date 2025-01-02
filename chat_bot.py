@@ -124,51 +124,33 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
 
-# --- Ask for user's name ---
-if "user_name" not in st.session_state:
-    # Capture user input
-    # user_name_input = st.text_input("Enter your full name to continue:", key="name_input")
-    st.session_state["user_name"] = st.text_input("Enter your full name to continue:", key="name_input")
-    
-    # print(user_name_input)
-    # if user_name_input:    
-        # st.session_state["user_name"] = user_name_input
-    if st.session_state["user_name"]:
-        print("here")
-        print(st.session_state['user_name'])
-        user_file = os.path.join(chat_directory, f"{st.session_state['user_name']}.json")
+# --- Callback function to handle sending messages ---
+def send_message():
+    user_message = st.session_state.user_input.strip()
+    if user_message:
+        # --- Append user message to chat history ---
+        st.session_state["messages"].append({"role": "user", "content": user_message})
         
-        # --- Load previous chat if it exists ---
-        if os.path.exists(user_file):
-            with open(user_file, "r") as file:
-                st.session_state["messages"] = json.load(file)
-            
-else:
-    # --- Callback function to handle sending messages ---
-    def send_message():
-        user_message = st.session_state.user_input.strip()
-        if user_message:
-            # --- Append user message to chat history ---
-            st.session_state["messages"].append({"role": "user", "content": user_message})
-            
-            # --- Prepare the prompt with the last 10 messages ---
-            chat_history = st.session_state["messages"][-10:]
-            prompt = "\n".join(
-                f"{msg['role'].capitalize()}: {msg['content']}" for msg in chat_history
-            )
-            
-            # --- Generate bot response ---
-            response = model.generate_content(prompt).text
-            st.session_state["messages"].append({"role": "bot", "content": response})
-            
-            # --- Save updated chat history ---
-            user_file = os.path.join(chat_directory, f"{st.session_state['user_name']}.json")
-            with open(user_file, "w") as file:
-                json.dump(st.session_state["messages"], file, indent=4)
-            
-            # --- Clear the input field ---
-            st.session_state.user_input = ""
+        # --- Prepare the prompt with the last 10 messages ---
+        chat_history = st.session_state["messages"][-10:]
+        prompt = "\n".join(
+            f"{msg['role'].capitalize()}: {msg['content']}" for msg in chat_history
+        )
+        
+        # --- Generate bot response ---
+        response = model.generate_content(prompt).text
+        st.session_state["messages"].append({"role": "bot", "content": response})
+        
+        # --- Save updated chat history ---
+        user_file = os.path.join(chat_directory, f"{st.session_state['user_name']}.json")
+        with open(user_file, "w") as file:
+            json.dump(st.session_state["messages"], file, indent=4)
+        
+        # --- Clear the input field ---
+        st.session_state.user_input = ""
 
+
+def main() :
     # --- Chat history container ---
     st.markdown(
         """
@@ -220,3 +202,32 @@ else:
         """,
         unsafe_allow_html=True,
     )
+
+# --- Ask for user's name ---
+if "user_name" not in st.session_state:
+    # Capture user input
+    user_name_input = st.text_input("Enter your full name to continue:", key="name_input")
+    # st.session_state["user_name"] = st.text_input("Enter your full name to continue:", key="name_input")
+    # st.session_state["user_name"] = user_name_input
+    
+    print(user_name_input)
+    if user_name_input:  
+        print("here1")
+        print(user_name_input)
+        st.session_state["user_name"] = user_name_input
+        print(st.session_state['user_name'])
+        if st.session_state["user_name"]:
+            print("here")
+            print(st.session_state['user_name'])
+            user_file = os.path.join(chat_directory, f"{st.session_state['user_name']}.json")
+            
+            # --- Load previous chat if it exists ---
+            if os.path.exists(user_file):
+                with open(user_file, "r") as file:
+                    st.session_state["messages"] = json.load(file)
+                    main()
+            else : 
+                main()
+
+else:
+    main()

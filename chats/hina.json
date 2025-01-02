@@ -1,0 +1,26 @@
+[
+    {
+        "role": "user",
+        "content": "hi"
+    },
+    {
+        "role": "bot",
+        "content": "Hello! Welcome, what can I do for you today? "
+    },
+    {
+        "role": "user",
+        "content": "hello"
+    },
+    {
+        "role": "bot",
+        "content": "Hello! Welcome, what can I do for you today?\u00a0Assuming you're still talking to the same bot, type whatever you want in the chat. If not, find the bot again and start a conversation with it."
+    },
+    {
+        "role": "user",
+        "content": "i'm having insomia"
+    },
+    {
+        "role": "bot",
+        "content": "Rest is a big part of living a healthy life. Are you open to suggestions to help you fall asleep?\u00a0Reducing stress, working out, and making sure the temperature of your bedroom is cool and that you are sleeping in a dark room are some suggestions that have helped others fall asleep."
+    }
+]
